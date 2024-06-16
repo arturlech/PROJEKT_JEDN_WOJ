@@ -50,6 +50,7 @@ def dodaj_pododdzial(entry_nazwa_pododdzialu, entry_nazwa_jednostki, entry_praco
     lista_pododdzialow(listbox_lista_pododdzialow)
 
     entry_nazwa_pododdzialu.delete(0, END)
+    entry_nazwa_jednostki.delete(0, END)
     entry_pracownicy.delete(0, END)
     entry_lokalizacja_pododdzialu.delete(0, END)
 
@@ -79,34 +80,35 @@ def pokaz_szczegoly_pododdzialu(listbox_lista_pododdzialow, label_nazwa_pododdzi
 
 
 def edytuj_pododdzial(listbox_lista_pododdzialow, entry_nazwa_pododdzialu, entry_nazwa_jednostki, entry_pracownicy,
-                      entry_lokalizacja_jednostek, button_dodaj_pododdzial):
+                      entry_lokalizacja_pododdzialu, button_dodaj_pododdzial):
     i = listbox_lista_pododdzialow.index(ACTIVE)
     entry_nazwa_pododdzialu.insert(0, pododdzialy[i].nazwa_pododdzialu)
     entry_nazwa_jednostki.insert(0, pododdzialy[i].nazwa_jednostki)
     entry_pracownicy.insert(0, pododdzialy[i].pracownicy)
-    entry_lokalizacja_jednostek.insert(0, pododdzialy[i].lokalizacja_jednostek)
+    entry_lokalizacja_pododdzialu.insert(0, pododdzialy[i].lokalizacja_pododdzialu
+                                         )
 
     button_dodaj_pododdzial.config(
         command=lambda: aktualizuj_pododdzial(i, entry_nazwa_pododdzialu, entry_nazwa_jednostki, entry_pracownicy,
-                                              entry_lokalizacja_jednostek, button_dodaj_pododdzial,
+                                              entry_lokalizacja_pododdzialu, button_dodaj_pododdzial,
                                               listbox_lista_pododdzialow))
 
 
 def aktualizuj_pododdzial(i, entry_nazwa_pododdzialu, entry_nazwa_jednostki, entry_pracownicy,
-                          entry_lokalizacja_jednostki, button_dodaj_pododdzial, listbox_lista_pododdzialow):
+                          entry_lokalizacja_pododdzialu, button_dodaj_pododdzial, listbox_lista_pododdzialow):
     pododdzialy[i].nazwa_pododdzialu = entry_nazwa_pododdzialu.get()
     pododdzialy[i].nazwa_jednostki = entry_nazwa_jednostki.get()
     pododdzialy[i].pracownicy = entry_pracownicy.get()
-    pododdzialy[i].lokalizacja_jednostki = entry_lokalizacja_jednostki.get()
+    pododdzialy[i].lokalizacja_jednostki = entry_lokalizacja_pododdzialu.get()
     lista_pododdzialow(listbox_lista_pododdzialow)
     button_dodaj_pododdzial.config(
         command=lambda: aktualizuj_pododdzial(i, entry_nazwa_pododdzialu, entry_nazwa_jednostki, entry_pracownicy,
-                                              entry_lokalizacja_jednostki,
+                                              entry_lokalizacja_pododdzialu,
                                               button_dodaj_pododdzial, listbox_lista_pododdzialow))
     entry_nazwa_pododdzialu.delete(0, END)
     entry_nazwa_jednostki.delete(0, END)
     entry_pracownicy.delete(0, END)
-    entry_lokalizacja_jednostki.delete(0, END)
+    entry_lokalizacja_pododdzialu.delete(0, END)
     entry_nazwa_pododdzialu.focus()
 
 
@@ -133,9 +135,11 @@ def tworzenie_pododdzialy_root(root):
                                                                                             label_nazwa_jednostki_szczegoly_obiektu_wartosc,
                                                                                             label_pracownicy_szczegoly_obiektu_wartosc,
                                                                                             label_lokalizacja_pododdzialu_szczegoly_obiektu_wartosc))
-    button_usun_obiekt = Button(ramka_lista_pododdzialy, text='Usuń obiekt')
-    button_edytuj_obiektu = Button(ramka_lista_pododdzialy, text='Edytuj obiekt')
-
+    button_usun_obiekt = Button(ramka_lista_pododdzialy, text='Usuń obiekt', command=lambda: usun_pododdzial(listbox_lista_pododdzialy))
+    button_edytuj_obiektu = Button(ramka_lista_pododdzialy, text='Edytuj obiekt',
+                                        command=lambda: edytuj_pododdzial(listbox_lista_pododdzialy, entry_nazwa_pododdzialu, entry_nazwa_jednostki,
+                                                                         entry_pracownicy, entry_lokalizacja_pododdzialu,
+                                                                         button_dodaj_pododdzial))
     label_lista_pododdzialy.grid(row=0, column=0, columnspan=3)
     listbox_lista_pododdzialy.grid(row=1, column=0, columnspan=3)
     button_pokaz_szczegoly_pododdzialu.grid(row=2, column=0)
@@ -149,7 +153,7 @@ def tworzenie_pododdzialy_root(root):
     label_pracownicy = Label(ramka_formularz, text="Pracownicy: ")
     label_lokalizacja_pododdzialu = Label(ramka_formularz, text="Lokalizacja pododdziału")
 
-    entry_nazwa_pododzialu = Entry(ramka_formularz)
+    entry_nazwa_pododdzialu = Entry(ramka_formularz)
     entry_nazwa_jednostki = Entry(ramka_formularz)
     entry_pracownicy = Entry(ramka_formularz)
     entry_lokalizacja_pododdzialu = Entry(ramka_formularz)
@@ -160,13 +164,13 @@ def tworzenie_pododdzialy_root(root):
     label_pracownicy.grid(row=3, column=0, sticky=W)
     label_lokalizacja_pododdzialu.grid(row=4, column=0, sticky=W)
 
-    entry_nazwa_pododzialu.grid(row=1, column=1)
+    entry_nazwa_pododdzialu.grid(row=1, column=1)
     entry_nazwa_jednostki.grid(row=2, column=1)
     entry_pracownicy.grid(row=3, column=1)
     entry_lokalizacja_pododdzialu.grid(row=4, column=1)
 
-    button_dodaj_pododdzial = Button(ramka_formularz, text="Dodaj jednostke",
-                                     command=lambda: dodaj_pododdzial(entry_nazwa_pododzialu, entry_nazwa_jednostki,
+    button_dodaj_pododdzial = Button(ramka_formularz, text="Dodaj pododdział",
+                                     command=lambda: dodaj_pododdzial(entry_nazwa_pododdzialu, entry_nazwa_jednostki,
                                                                       entry_pracownicy, entry_lokalizacja_pododdzialu,
                                                                       listbox_lista_pododdzialy))
     button_dodaj_pododdzial.grid(row=5, column=1, columnspan=2)
